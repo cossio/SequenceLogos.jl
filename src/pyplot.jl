@@ -37,9 +37,9 @@ function nt_color(nt::Char)
 end
 
 """
-    plot_sequence_logo(sequence_logo)
+    plot_sequence_logo(sequence_logo; thresh=0)
 
-Plots a sequence logo.
+Plots a sequence logo. Ignores letters with weights smaller than `thresh`.
 """
 function plot_sequence_logo(logo::SequenceLogo, color_fun; thresh=0)
     sorted_logo = sort_letters(logo)
@@ -90,7 +90,7 @@ function letter_at(letter::Char, color::String, (x, y), yscale::Real, ax)
             'A' => matplotlib.textpath.TextPath((-0.350, 0), "A", size=1, prop=fp),
             'C' => matplotlib.textpath.TextPath((-0.366, 0), "C", size=1, prop=fp)
         )
-    text = get(GLYPHS, letter, matplotlib.textpath.TextPath((-0.35, 0), "C", size=1, prop=fp))
+    text = get(GLYPHS, letter, matplotlib.textpath.TextPath((-0.35, 0), string(letter), size=1, prop=fp))
     t = (matplotlib.transforms.Affine2D().scale(1 * globscale, yscale * globscale) +
          matplotlib.transforms.Affine2D().translate(x, y) + ax.transData)
     p = matplotlib.patches.PathPatch(text, lw=0, fc=color, transform=t)
