@@ -33,14 +33,12 @@ function nt_color(nt::Char)
 end
 
 """
-    plot_sequence_logo(sequence_logo; thresh=0)
+    plot_sequence_logo(sequence_logo, color_fun, ax; thresh=0)
 
 Plots a sequence logo. Ignores letters with weights smaller than `thresh`.
 """
-function plot_sequence_logo(logo::SequenceLogo, color_fun; thresh=0)
+function plot_sequence_logo(logo::SequenceLogo, color_fun, ax; thresh=0)
     sorted_logo = sort_letters(logo)
-    figsize = (max(round(Int, length(sorted_logo.sites)/3), 2), 3)
-    fig, ax = matplotlib.pyplot.subplots(figsize=figsize)
     y_min = y_max = 0.0
     for (x, site) in enumerate(sorted_logo.sites)
         y_pos = y_neg = 0.0
@@ -65,14 +63,21 @@ function plot_sequence_logo(logo::SequenceLogo, color_fun; thresh=0)
     end
     matplotlib.pyplot.xlim((0, length(sorted_logo.sites) + 1))
     matplotlib.pyplot.ylim((y_min, y_max))
-    matplotlib.pyplot.tight_layout()
-    matplotlib.pyplot.show()
+    return nothing
 end
 
-plot_sequence_logo_aa(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, aa_color; thresh=thresh)
-plot_sequence_logo_nt(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, nt_color; thresh=thresh)
-plot_sequence_logo_aa(w::AbstractMatrix; thresh=0) = plot_sequence_logo_aa(logo_from_matrix_aa(w); thresh=thresh)
-plot_sequence_logo_nt(w::AbstractMatrix; thresh=0) = plot_sequence_logo_nt(logo_from_matrix_nt(w); thresh=thresh)
+function plot_sequence_logo(logo::SequenceLogo, color_fun; figsize=default_figsize(logo), kwargs...)
+    _, ax = matplotlib.pyplot.subplots(figsize=figsize)
+    plot_sequence_logo(logo, color_fun, ax; kwargs...)
+end
+plot_sequence_logo(logo::SequenceLogo, color_fun, ::Nothing; kwargs...) = plot_sequence_logo(logo, color_fun; kwargs...)
+
+default_figsize(logo::SequenceLogo) = (max(round(Int, length(logo.sites)/3), 2), 3)
+
+plot_sequence_logo_aa(logo::SequenceLogo, ax=nothing; thresh=0) = plot_sequence_logo(logo, aa_color, ax; thresh=thresh)
+plot_sequence_logo_nt(logo::SequenceLogo, ax=nothing; thresh=0) = plot_sequence_logo(logo, nt_color, ax; thresh=thresh)
+plot_sequence_logo_aa(w::AbstractMatrix, ax=nothing; thresh=0) = plot_sequence_logo_aa(logo_from_matrix_aa(w), ax; thresh=thresh)
+plot_sequence_logo_nt(w::AbstractMatrix, ax=nothing; thresh=0) = plot_sequence_logo_nt(logo_from_matrix_nt(w), ax; thresh=thresh)
 
 """
     letter_at(letter, color, (x, y), yscale, ax)
