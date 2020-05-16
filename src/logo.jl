@@ -62,7 +62,6 @@ the number of possible letters and `L` the length of the sequence.
 """
 function logo_from_matrix(w::AbstractArray, alphabet::String)
     @assert size(w, 1) ≤ length(alphabet)
-    # TODO: use BioSeqInt when it gets registered
     sites = Vector{SequenceLogoSite}(undef, size(w, 2))
     for i = 1:size(w, 2)
         letters = [WeightedLetter(alphabet[a], w[a,i]) for a = 1:size(w, 1)]

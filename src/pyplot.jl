@@ -37,8 +37,8 @@ end
 
 Plots a sequence logo. Ignores letters with weights smaller than `thresh`.
 """
-function plot_sequence_logo(logo::SequenceLogo, color_fun; thresh=0)
-    sorted_logo = sort_letters(logo)
+function plot_sequence_logo(logo::SequenceLogo, color_fun; thresh=0, remove_duplicate_letters=true)
+    sorted_logo = sort_letters(logo; remove_duplicates=remove_duplicate_letters)
     y_min = y_max = 0.0
     for (x, site) in enumerate(sorted_logo.sites)
         y_pos = y_neg = 0.0
@@ -68,10 +68,10 @@ end
 
 default_figsize(logo::SequenceLogo) = (max(round(Int, length(logo.sites)/3), 2), 3)
 
-plot_sequence_logo_aa(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, aa_color; thresh=thresh)
-plot_sequence_logo_nt(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, nt_color; thresh=thresh)
-plot_sequence_logo_aa(w::AbstractMatrix; thresh=0) = plot_sequence_logo_aa(logo_from_matrix_aa(w); thresh=thresh)
-plot_sequence_logo_nt(w::AbstractMatrix; thresh=0) = plot_sequence_logo_nt(logo_from_matrix_nt(w); thresh=thresh)
+plot_sequence_logo_aa(logo::SequenceLogo; kwargs...) = plot_sequence_logo(logo, aa_color; kwargs...)
+plot_sequence_logo_nt(logo::SequenceLogo; kwargs...) = plot_sequence_logo(logo, nt_color; kwargs...)
+plot_sequence_logo_aa(w::AbstractMatrix; kwargs...) = plot_sequence_logo_aa(logo_from_matrix_aa(w); kwargs...)
+plot_sequence_logo_nt(w::AbstractMatrix; kwargs...) = plot_sequence_logo_nt(logo_from_matrix_nt(w); kwargs...)
 
 """
     letter_at(letter, color, (x, y), yscale)
