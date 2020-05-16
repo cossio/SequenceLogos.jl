@@ -1,22 +1,18 @@
-#= Based on https://stackoverflow.com/questions/42615527/sequence-logos-in-matplotlib-aligning-xticks =#
+#= Based on https://stackoverflow.com/questions/42615527/sequence-logos-in-matplotlib-aligning-xticks 
+Color scheme from Weblogo, https://weblogo.berkeley.edu/Crooks-2004-GR-WebLogo.pdf
+=#
 
 using PyPlot
 
 function aa_color(aa::Char)
-    if aa in ('C',)
+    if aa in ('G', 'S', 'T', 'Y', 'C', 'Q', 'N') # polar
         return "green"
-    elseif aa in ('F', 'W', 'Y')
-        return "gold"
-    elseif aa in ('Q', 'N', 'S', 'T')
-        return "purple"
-    elseif aa in ('V', 'L', 'I', 'M')
-        return "black"
-    elseif aa in ('K', 'R', 'H')
+    elseif aa in ('K', 'R', 'H') # basic
         return "blue"
-    elseif aa in ('D', 'E')
+    elseif aa in ('D', 'E') # acidic
         return "red"
-    elseif aa in ('A', 'P', 'G')
-        return "grey"
+    elseif aa in ('A', 'V', 'L', 'I', 'P', 'W', 'F', 'M') # hydrophobic
+        return "orange"
     else
         return "black"
     end
@@ -25,12 +21,12 @@ end
 function nt_color(nt::Char) 
     if nt == 'G'
         return "orange"
-    elseif nt == 'A'
+    elseif nt in ('T', 'U')
         return "red"
     elseif nt == 'C'
         return "blue"
-    elseif nt == 'T'
-        return "darkgreen"
+    elseif nt == 'A'
+        return "green"
     else
         return "black"
     end
@@ -75,6 +71,8 @@ end
 
 plot_sequence_logo_aa(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, aa_color; thresh=thresh)
 plot_sequence_logo_nt(logo::SequenceLogo; thresh=0) = plot_sequence_logo(logo, nt_color; thresh=thresh)
+plot_sequence_logo_aa(w::AbstractMatrix; thresh=0) = plot_sequence_logo_aa(logo_from_matrix_aa(w); thresh=thresh)
+plot_sequence_logo_nt(w::AbstractMatrix; thresh=0) = plot_sequence_logo_nt(logo_from_matrix_nt(w); thresh=thresh)
 
 """
     letter_at(letter, color, (x, y), yscale, ax)
@@ -88,7 +86,9 @@ function letter_at(letter::Char, color::String, (x, y), yscale::Real, ax)
             'T' => matplotlib.textpath.TextPath((-0.305, 0), "T", size=1, prop=fp),
             'G' => matplotlib.textpath.TextPath((-0.384, 0), "G", size=1, prop=fp),
             'A' => matplotlib.textpath.TextPath((-0.350, 0), "A", size=1, prop=fp),
-            'C' => matplotlib.textpath.TextPath((-0.366, 0), "C", size=1, prop=fp)
+            'C' => matplotlib.textpath.TextPath((-0.366, 0), "C", size=1, prop=fp),
+            'W' => matplotlib.textpath.TextPath((-0.470, 0), "W", size=1, prop=fp),
+            'I' => matplotlib.textpath.TextPath((-0.152, 0), "I", size=1, prop=fp)
         )
     text = get(GLYPHS, letter, matplotlib.textpath.TextPath((-0.35, 0), string(letter), size=1, prop=fp))
     t = (matplotlib.transforms.Affine2D().scale(1 * globscale, yscale * globscale) +
