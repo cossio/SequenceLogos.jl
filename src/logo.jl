@@ -1,3 +1,5 @@
+import BioSeqInt
+
 struct WeightedLetter
     letter::Char
     weight::Float64
@@ -70,14 +72,16 @@ function logo_from_matrix(w::AbstractArray, alphabet::String)
     return SequenceLogo(sites)
 end
 
-# TODO: use alphabet from BioSeqInt when it gets registered
-logo_from_matrix_nt(w::AbstractMatrix) = logo_from_matrix(w, "ACGTX")
-logo_from_matrix_aa(w::AbstractMatrix) = logo_from_matrix(w, "ACDEFGHIKLMNPQRSTVWYX")
+const GAP = 'X'
+aa_alphabet() = replace(BioSeqInt.alphabet_aa(), '-' => GAP)
+nt_alphabet() = replace(BioSeqInt.alphabet_nt(), '-' => GAP)
+logo_from_matrix_nt(w::AbstractMatrix) = logo_from_matrix(w, nt_alphabet())
+logo_from_matrix_aa(w::AbstractMatrix) = logo_from_matrix(w, aa_alphabet())
 
 """
     conservation_matrix(P)
 
-Given a matrix of frequencies `P` of size (q, L), where `q` is the number 
+Given a matrix of frequencies `P` of size (q, L), where `q` is the number
 of possible letters and `L` the sequence length, returns the matrix of
 conservations (as defined by Schneider and Stephens, 1990).
 """
