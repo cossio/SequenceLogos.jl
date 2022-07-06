@@ -1,5 +1,3 @@
-import BioSeqInt
-
 struct WeightedLetter
     letter::Char
     weight::Float64
@@ -72,40 +70,50 @@ function logo_from_matrix(w::AbstractArray, alphabet::String)
     return SequenceLogo(sites)
 end
 
-const GAP = 'X'
-aa_alphabet() = replace(BioSeqInt.alphabet_aa(), '-' => GAP)
-nt_alphabet() = replace(BioSeqInt.alphabet_nt(), '-' => GAP)
-logo_from_matrix_nt(w::AbstractMatrix) = logo_from_matrix(w, nt_alphabet())
-logo_from_matrix_aa(w::AbstractMatrix) = logo_from_matrix(w, aa_alphabet())
+
+normalize(x::AbstractArray) = x ./ sum(x; dims = 1)
 
 """
-    conservation_matrix(P)
+    conservation_scores(P; unit = log(2))
 
-Given a matrix of frequencies `P` of size (q, L), where `q` is the number
-of possible letters and `L` the sequence length, returns the matrix of
-conservations (as defined by Schneider and Stephens, 1990).
+Conservation scores at each site. The default unit = log(2) gives results in bits.
 """
-function conservation_matrix(P::AbstractMatrix)
-    q = size(P, 1)
-    p = P ./ sum(P; dims=1)
-    Smax = log2(q)
-    Sobs = -sum(xlogx.(p); dims=1)
-    return p .* (Smax .- Sobs)
+function conservation_scores(P::AbstractMatrix; unit::Real = log(2))
+    return log2(size(P, 1)) .+ sum(xlogx.(normalize(P)); dims = 1) ./ unit
 end
 
 """
-    conservation_matrix(P, M)
+    conservation_scores(P, M; unit = log(2))
+
+Similar to `conservation_scores(P)`, but instead of a flat measure over
+letters at each site, computes a KL divergence to a prior measure `M`.
+"""
+function conservation_scores(P::AbstractMatrix, M::AbstractMatrix; unit::Real = log(2))
+    p = normalize(P)
+    m = normalize(M)
+    KL = sum(p .* xlogy.(p ./ m); dims=1) ./ unit
+    return KL
+end
+
+"""
+    conservation_matrix(P; unit = log(2))
+
+Given a matrix of frequencies `P` of size (q, L), where `q` is the number
+of possible letters and `L` the sequence length, returns the matrix of
+conservations (as defined by Schneider and Stephens 1990, 10.1093/nar/18.20.6097).
+"""
+function conservation_matrix(P::AbstractMatrix; unit = log(2))
+    return normalize(P) .* conservation_scores(P; unit = unit)
+end
+
+"""
+    conservation_matrix(P, M; unit = log(2))
 
 Similar to `conservation_matrix(P)`, but instead of a flat measure over
 letters at each site, computes a KL divergence to a prior measure `M`.
 """
-function conservation_matrix(P::AbstractMatrix, M::AbstractMatrix)
-    @assert size(P) == size(M)
-    q = size(P, 1)
-    p = P ./ sum(P; dims=1)
-    m = M ./ sum(M; dims=1)
-    KL = sum(p .* xlogy.(p ./ m); dims=1)
-    return p .* KL
+function conservation_matrix(P::AbstractMatrix, M::AbstractMatrix; unit = log(2))
+    return normalize(P) .* conservation_scores(P, M; unit = unit)
 end
 
 function xlogx(x::Real)
