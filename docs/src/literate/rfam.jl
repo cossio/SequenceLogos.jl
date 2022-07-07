@@ -36,7 +36,7 @@ NTs = "ACGU-";
 function onehot(s::String)
     return reshape(collect(s), 1, length(s)) .== collect(NTs)
 end
-X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs))
+X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs));
 
 # Sequence logo
 
@@ -60,3 +60,4 @@ end
 
 PyPlot.matplotlib.pyplot.figure(figsize=(15,2))
 seqlogo_entropic(reshape(mean(X; dims=3), 5, 108))
+PyPlot.matplotlib.pyplot.show()
