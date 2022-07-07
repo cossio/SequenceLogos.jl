@@ -16,50 +16,7 @@ for line in eachline(path)
 end</code></pre><p>RNA nucleotides</p><pre><code class="language-julia hljs">NTs = &quot;ACGU-&quot;;</code></pre><p>One-hot representation</p><pre><code class="language-julia hljs">function onehot(s::String)
     return reshape(collect(s), 1, length(s)) .== collect(NTs)
 end
-X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5×108×6112 BitArray{3}:
-[:, :, 1] =
- 0  0  0  0  0  1  0  0  1  1  0  1  0  …  1  1  1  1  0  1  0  1  1  0  1  1
- 1  0  1  0  0  0  0  1  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  1  0  1     0  0  0  0  1  0  0  0  0  1  0  0
- 0  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
-
-[:, :, 2] =
- 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  0  0  1  0  1  0  1  1  0  1  0
- 0  0  1  0  0  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  1  0  1     1  1  1  0  1  0  0  0  0  1  0  1
- 1  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
-
-[:, :, 3] =
- 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  0  1  0  1  0  0  1  0  1  0
- 1  0  1  0  0  0  0  1  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  1  0  1     1  0  1  0  1  0  0  1  0  1  0  1
- 0  1  0  1  1  0  1  0  1  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
-
-;;; … 
-
-[:, :, 6110] =
- 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  1  1  0  1  0  0  1  0  0  1
- 1  0  1  0  1  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 0  1  0  0  0  0  0  0  0  0  1  0  1     1  0  0  0  1  0  0  1  0  1  1  0
- 0  0  0  1  0  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
-
-[:, :, 6111] =
- 1  1  0  0  0  1  0  0  1  0  0  1  0  …  0  0  1  1  0  1  0  1  1  0  0  1
- 0  0  1  0  0  0  0  1  0  1  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  1  0  1     1  1  0  0  1  0  0  0  0  1  1  0
- 0  0  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
-
-[:, :, 6112] =
- 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  1  1  0  1  0  1  1  0  0  1
- 0  0  1  0  0  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
- 1  0  0  0  0  0  0  0  0  0  1  0  1     1  0  0  0  1  0  0  0  0  1  1  0
- 0  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
- 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0</code></pre><p>Sequence logo</p><pre><code class="language-julia hljs">xlog2x(x) = xlogx(x) / log(oftype(x,2))
+X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs));</code></pre><p>Sequence logo</p><pre><code class="language-julia hljs">xlog2x(x) = xlogx(x) / log(oftype(x,2))
 logo_from_matrix(w::AbstractMatrix) = SequenceLogos.logo_from_matrix(w, replace(NTs, &#39;-&#39; =&gt; &#39;⊟&#39;))
 
 
@@ -74,4 +31,5 @@ function seqlogo_entropic(p::AbstractMatrix; max_ylim=true)
     PyPlot.matplotlib.pyplot.xlabel(&quot;site&quot;)
     return nothing
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">seqlogo_entropic (generic function with 1 method)</code></pre><p>Plot!</p><pre><code class="language-julia hljs">PyPlot.matplotlib.pyplot.figure(figsize=(15,2))
-seqlogo_entropic(reshape(mean(X; dims=3), 5, 108))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">findfont: Font family [&#39;Arial&#39;] not found. Falling back to DejaVu Sans.</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Thursday 7 July 2022 07:37">Thursday 7 July 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+seqlogo_entropic(reshape(mean(X; dims=3), 5, 108))
+PyPlot.matplotlib.pyplot.show()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">findfont: Font family [&#39;Arial&#39;] not found. Falling back to DejaVu Sans.</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Thursday 7 July 2022 15:54">Thursday 7 July 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
