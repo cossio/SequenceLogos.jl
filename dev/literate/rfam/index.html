@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>RFAM · SequenceLogos.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">SequenceLogos.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Examples</span><ul><li class="is-active"><a class="tocitem" href>RFAM</a></li></ul></li><li><a class="tocitem" href="../../reference/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>RFAM</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>RFAM</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/cossio/SequenceLogos.jl/blob/master/docs/src/literate/rfam.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="SequenceLogos-examples-with-RFAM"><a class="docs-heading-anchor" href="#SequenceLogos-examples-with-RFAM">SequenceLogos examples with RFAM</a><a id="SequenceLogos-examples-with-RFAM-1"></a><a class="docs-heading-anchor-permalink" href="#SequenceLogos-examples-with-RFAM" title="Permalink"></a></h1><pre><code class="language-julia hljs">import GitHub
+import PyPlot
+import SequenceLogos
+using Downloads: download
+using Statistics: mean
+using LogExpFunctions: xlogx</code></pre><p>Fetch RNA family alignment RF00162 from RFAM (pre-stored as a Github Gist)</p><pre><code class="language-julia hljs">data = GitHub.gist(&quot;b63e87024fac287a1800b1555276a04b&quot;)
+url = data.files[&quot;RF00162-trimmed.afa&quot;][&quot;raw_url&quot;]
+path = download(url, &quot;temp.afa&quot;; timeout = Inf)</code></pre><p>Parse lines</p><pre><code class="language-julia hljs">seqs = String[]
+for line in eachline(path)
+    if startswith(line, &#39;&gt;&#39;)
+        continue
+    else
+        push!(seqs, line)
+    end
+end</code></pre><p>RNA nucleotides</p><pre><code class="language-julia hljs">NTs = &quot;ACGU-&quot;;</code></pre><p>One-hot representation</p><pre><code class="language-julia hljs">function onehot(s::String)
+    return reshape(collect(s), 1, length(s)) .== collect(NTs)
+end
+X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5×108×6112 BitArray{3}:
+[:, :, 1] =
+ 0  0  0  0  0  1  0  0  1  1  0  1  0  …  1  1  1  1  0  1  0  1  1  0  1  1
+ 1  0  1  0  0  0  0  1  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  1  0  1     0  0  0  0  1  0  0  0  0  1  0  0
+ 0  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+
+[:, :, 2] =
+ 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  0  0  1  0  1  0  1  1  0  1  0
+ 0  0  1  0  0  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  1  0  1     1  1  1  0  1  0  0  0  0  1  0  1
+ 1  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+
+[:, :, 3] =
+ 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  0  1  0  1  0  0  1  0  1  0
+ 1  0  1  0  0  0  0  1  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  1  0  1     1  0  1  0  1  0  0  1  0  1  0  1
+ 0  1  0  1  1  0  1  0  1  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+
+;;; … 
+
+[:, :, 6110] =
+ 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  1  1  0  1  0  0  1  0  0  1
+ 1  0  1  0  1  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 0  1  0  0  0  0  0  0  0  0  1  0  1     1  0  0  0  1  0  0  1  0  1  1  0
+ 0  0  0  1  0  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+
+[:, :, 6111] =
+ 1  1  0  0  0  1  0  0  1  0  0  1  0  …  0  0  1  1  0  1  0  1  1  0  0  1
+ 0  0  1  0  0  0  0  1  0  1  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  1  0  1     1  1  0  0  1  0  0  0  0  1  1  0
+ 0  0  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+
+[:, :, 6112] =
+ 0  0  0  0  0  1  0  0  0  1  0  1  0  …  0  1  1  1  0  1  0  1  1  0  0  1
+ 0  0  1  0  0  0  0  1  1  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0
+ 1  0  0  0  0  0  0  0  0  0  1  0  1     1  0  0  0  1  0  0  0  0  1  1  0
+ 0  1  0  1  1  0  1  0  0  0  0  0  0     0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0     0  0  0  0  0  0  0  0  0  0  0  0</code></pre><p>Sequence logo</p><pre><code class="language-julia hljs">xlog2x(x) = xlogx(x) / log(oftype(x,2))
+logo_from_matrix(w::AbstractMatrix) = SequenceLogos.logo_from_matrix(w, replace(NTs, &#39;-&#39; =&gt; &#39;⊟&#39;))
+
+
+function seqlogo_entropic(p::AbstractMatrix; max_ylim=true)
+    @assert size(p, 1) == 5 # nucleotides + gap
+    w = p ./ sum(p; dims=1)
+    H = sum(-xlog2x.(w); dims=1)
+    @assert all(0 .≤ H .≤ log2(5))
+    SequenceLogos.plot_sequence_logo(logo_from_matrix(w .* (log2(5) .- H)), SequenceLogos.nt_color)
+    max_ylim &amp;&amp; PyPlot.matplotlib.pyplot.ylim((0, log2(5)))
+    PyPlot.matplotlib.pyplot.ylabel(&quot;conservation (bits)&quot;)
+    PyPlot.matplotlib.pyplot.xlabel(&quot;site&quot;)
+    return nothing
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">seqlogo_entropic (generic function with 1 method)</code></pre><p>Plot!</p><pre><code class="language-julia hljs">PyPlot.matplotlib.pyplot.figure(figsize=(15,2))
+seqlogo_entropic(reshape(mean(X; dims=3), 5, 108))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">findfont: Font family [&#39;Arial&#39;] not found. Falling back to DejaVu Sans.</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Thursday 7 July 2022 06:40">Thursday 7 July 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
