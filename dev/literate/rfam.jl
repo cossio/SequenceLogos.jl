@@ -60,4 +60,4 @@ end
 
 PyPlot.matplotlib.pyplot.figure(figsize=(15,2))
 seqlogo_entropic(reshape(mean(X; dims=3), 5, 108))
-PyPlot.matplotlib.pyplot.show()
+PyPlot.matplotlib.pyplot.gcf()
