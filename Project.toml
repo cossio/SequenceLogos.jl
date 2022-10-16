@@ -4,7 +4,6 @@ authors = ["cossio <j.cossio.diaz@gmail.com>"]
 version = "0.2.1-DEV"
 
 [deps]
-CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
 Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
 
