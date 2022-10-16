@@ -1,7 +1,7 @@
 name = "SequenceLogos"
 uuid = "7a3f67ce-6eeb-4904-9da4-2cbd106a5944"
 authors = ["cossio <j.cossio.diaz@gmail.com>"]
-version = "0.2.0"
+version = "0.2.1-DEV"
 
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
