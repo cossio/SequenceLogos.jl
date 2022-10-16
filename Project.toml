@@ -1,6 +1,6 @@
 name = "SequenceLogos"
 uuid = "7a3f67ce-6eeb-4904-9da4-2cbd106a5944"
-authors = ["cossio <j.cossio.diaz@gmail.com>"]
+authors = "Jorge Fernandez-de-Cossio-Diaz <j.cossio.diaz@gmail.com>"
 version = "0.2.0"
 
 [deps]
