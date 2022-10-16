@@ -13,7 +13,7 @@ using LogExpFunctions: xlogx
 
 data = GitHub.gist("b63e87024fac287a1800b1555276a04b")
 url = data.files["RF00162-trimmed.afa"]["raw_url"]
-path = download(url, "temp.afa"; timeout = Inf)
+path = download(url; timeout = Inf)
 nothing #hide
 
 # Parse lines
