@@ -1,7 +1,7 @@
 name = "SequenceLogos"
 uuid = "7a3f67ce-6eeb-4904-9da4-2cbd106a5944"
 authors = "Jorge Fernandez-de-Cossio-Diaz <j.cossio.diaz@gmail.com>"
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
