@@ -1,30 +1,47 @@
 import CairoMakie
 import Makie
 
-"""
-    letter_at(letter, color, (x, y), yscale)
+function makie_seqlogo!(
+    ax::Makie.Axis, weights::AbstractMatrix, letters::AbstractMatrix, colors::AbstractMatrix
+)
+    @assert size(weights) == size(letters) == size(colors)
 
-Adds a letter to the current plot, at the given position.
-"""
-function letter_at!(ax::Makie.Axis, letter::Char, color::String, (x, y), yscale::Real)
-    Makie.text!(ax, position = (x, y), align = (:center, :center), space = :data)
-    # TODO: INcomplete!
-    error("This function is incomplete")
+    x = repeat((1:size(weights, 2))', size(weights, 1), 1)
+    y = zero(weights)
+    for i in axes(weights, 1)
+        y_pos = y_neg = 0.0
+        for j in axes(weights, 2)
+            if weights[i,j] > 0
+                y_pos += weights[i,j]
+                y[i,j] = y_pos
+            elseif weights[i,j] < 0
+                y_neg += weights[i,j]
+                y[i,j] = y_neg
+            end
+        end
+    end
 
-    fp = matplotlib.font_manager.FontProperties(family="Arial", weight="bold")
-    globscale = 1.35
-    GLYPHS = Dict(
-            'T' => matplotlib.textpath.TextPath((-0.305, 0), "T", size=1, prop=fp),
-            'G' => matplotlib.textpath.TextPath((-0.384, 0), "G", size=1, prop=fp),
-            'A' => matplotlib.textpath.TextPath((-0.350, 0), "A", size=1, prop=fp),
-            'C' => matplotlib.textpath.TextPath((-0.366, 0), "C", size=1, prop=fp),
-            'W' => matplotlib.textpath.TextPath((-0.470, 0), "W", size=1, prop=fp),
-            'I' => matplotlib.textpath.TextPath((-0.152, 0), "I", size=1, prop=fp)
-        )
-    text = get(GLYPHS, letter, matplotlib.textpath.TextPath((-0.35, 0), string(letter), size=1, prop=fp))
-    t = (matplotlib.transforms.Affine2D().scale(1 * globscale, yscale * globscale) +
-         matplotlib.transforms.Affine2D().translate(x, y) + ax.transData)
-    p = matplotlib.patches.PathPatch(text, lw=0, fc=color, transform=t)
-    ax.add_artist(p)
-    return p
+    Makie.text!(ax, vec(x), vec(y); text=vec(letters), textsize=vec(abs.(weights)))
+end
+
+function makie_seqlogo!(
+    ax::Makie.Axis, weights::AbstractMatrix, letters::AbstractVector, colors::AbstractVector
+)
+    @assert size(weights, 1) == length(letters) == length(colors)
+    weights_sorted, letters_sorted, colors_sorted = sort_logo(weights, letters, colors)
+    return makie_seqlogo!(ax, weights_sorted, letters_sorted, colors_sorted)
+end
+
+function sort_logo(weights::AbstractMatrix, letters::AbstractVector, colors::AbstractVector)
+    @assert size(weights, 1) == length(letters) == length(colors)
+    weights_sorted = similar(weights)
+    letters_sorted = similar(letters, size(weights))
+    colors_sorted = similar(colors, size(weights))
+    for i in axes(weights, 1)
+        p = sortperm(weights[i,:])
+        weights_sorted[i, :] .= weights[i, p]
+        letters_sorted[i, :] .= letters[p]
+        colors_sorted[i, :] .= colors[p]
+    end
+    return weights_sorted, letters_sorted, colors_sorted
 end
