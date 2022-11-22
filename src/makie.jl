@@ -1,7 +1,38 @@
 import CairoMakie
 import Makie
 
-function makie_seqlogo!(
+struct SeqLogo{W<:AbstractMatrix,L<:AbstractVecOrMat,C<:AbstractVecOrMat}
+    weights::W
+    letters::L
+    colors::C
+    function SeqLogo{W,L,C}(weights::W, letters::L, colors::C) where {W<:AbstractMatrix,L<:AbstractVector,C<:AbstractVector}
+        @assert size(weights, 1) == length(letters) == length(colors)
+        return new{W,L,C}(weights, letters, colors)
+    end
+    function SeqLogo{W,L,C}(weights::W, letters::L, colors::C) where {W<:AbstractMatrix,L<:AbstractMatrix,C<:AbstractMatrix}
+        @assert size(weights) == size(letters) == size(colors)
+        return new{W,L,C}(weights, letters, colors)
+    end
+end
+
+function SeqLogo(weights::W, letters::L, colors::C) where {W,L,C}
+    return SeqLogo{W,L,C}(weights, letters, colors)
+end
+
+function sort_logo(logo::SeqLogo)
+    weights = similar(logo.weights)
+    letters = similar(logo.letters, size(weights))
+    colors = similar(logo.colors, size(weights))
+    for i in axes(weights, 1)
+        p = sortperm(logo.weights[i,:])
+        weights[i, :] .= logo.weights[i, p]
+        letters[i, :] .= logo.letters[p]
+        colors[i, :] .= logo.colors[p]
+    end
+    return SeqLogo(weights, letters, colors)
+end
+
+function makie_sequence_logo!(
     ax::Makie.Axis, weights::AbstractMatrix, letters::AbstractMatrix, colors::AbstractMatrix
 )
     @assert size(weights) == size(letters) == size(colors)
@@ -24,24 +55,10 @@ function makie_seqlogo!(
     Makie.text!(ax, vec(x), vec(y); text=vec(letters), textsize=vec(abs.(weights)))
 end
 
-function makie_seqlogo!(
+function makie_sequence_logo!(
     ax::Makie.Axis, weights::AbstractMatrix, letters::AbstractVector, colors::AbstractVector
 )
     @assert size(weights, 1) == length(letters) == length(colors)
-    weights_sorted, letters_sorted, colors_sorted = sort_logo(weights, letters, colors)
+    weights_sorted, letters_sorted, colors_sorted = sort_sequence_logo(weights, letters, colors)
     return makie_seqlogo!(ax, weights_sorted, letters_sorted, colors_sorted)
-end
-
-function sort_logo(weights::AbstractMatrix, letters::AbstractVector, colors::AbstractVector)
-    @assert size(weights, 1) == length(letters) == length(colors)
-    weights_sorted = similar(weights)
-    letters_sorted = similar(letters, size(weights))
-    colors_sorted = similar(colors, size(weights))
-    for i in axes(weights, 1)
-        p = sortperm(weights[i,:])
-        weights_sorted[i, :] .= weights[i, p]
-        letters_sorted[i, :] .= letters[p]
-        colors_sorted[i, :] .= colors[p]
-    end
-    return weights_sorted, letters_sorted, colors_sorted
 end
