@@ -16,3 +16,7 @@ plot_sequence_logo_nt(logo)
 ```
 
 ![Example sequence logo](/example.png)
+
+# Related
+
+* https://github.com/cossio/Logomaker.jl
