@@ -1,0 +1,7 @@
+[RF00162_trimmed]
+git-tree-sha1 = "de354c34ade084ac3634c94c2ea4ede8ed721ea8"
+lazy = true
+
+    [[RF00162_trimmed.download]]
+    sha256 = "c90ab58f8c2b290dc44f9aac6ea2c5d03d476acf7f96fd938d68bbf36c20d9bf"
+    url = "https://gist.github.com/cossio/16360fcfdbddbd13430d485f0000e379/raw/de354c34ade084ac3634c94c2ea4ede8ed721ea8.tar.gz"

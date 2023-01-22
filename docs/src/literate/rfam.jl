@@ -2,24 +2,23 @@
 # SequenceLogos examples with RFAM
 =#
 
-import GitHub
-import PyPlot
 import SequenceLogos
-using Downloads: download
+using LazyArtifacts: LazyArtifacts, @artifact_str
+import Makie
+import CairoMakie
 using Statistics: mean
 using LogExpFunctions: xlogx
 
-# Fetch RNA family alignment RF00162 from RFAM (pre-stored as a Github Gist)
 
-data = GitHub.gist("b63e87024fac287a1800b1555276a04b")
-url = data.files["RF00162-trimmed.afa"]["raw_url"]
-path = download(url; timeout = Inf)
+import PyPlot
+
+# Fetch RNA family alignment RF00162 from RFAM (pre-stored as a Github Gist)
+fasta_path = joinpath(artifact"RF00162_trimmed", "RF00162-trimmed.afa")
 nothing #hide
 
 # Parse lines
-
 seqs = String[]
-for line in eachline(path)
+for line in eachline(fasta_path)
     if startswith(line, '>')
         continue
     else
@@ -37,10 +36,30 @@ function onehot(s::String)
     return reshape(collect(s), 1, length(s)) .== collect(NTs)
 end
 X = reshape(reduce(hcat, onehot.(seqs)), 5, :, length(seqs));
-
-# Sequence logo
-
+p = reshape(mean(X; dims=3), size(X)[1:2]...)
 xlog2x(x) = xlogx(x) / log(oftype(x,2))
+H = sum(-xlog2x.(p); dims=1)
+
+weights = cons = p .* (log2(5) .- H)
+
+letters = collect(NTs)
+colors = [:red, :red, :blue, :blue, :black]
+
+fig = Makie.Figure()
+ax = Makie.Axis(fig[1,1], width=600, height=100)
+SequenceLogos.makie_sequence_logo!(ax, cons, letters, colors)
+Makie.resize_to_layout!(fig)
+fig
+
+function plot_example()
+    fig = Makie.Figure()
+    ax = Makie.Axis(fig[1,1], width=600, height=100)
+    SequenceLogos.makie_sequence_logo!(ax, cons, letters, colors)
+    Makie.resize_to_layout!(fig)
+    fig
+end
+
+
 logo_from_matrix(w::AbstractMatrix) = SequenceLogos.logo_from_matrix(w, replace(NTs, '-' => '⊟'))
 
 
