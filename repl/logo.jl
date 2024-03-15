@@ -3,7 +3,8 @@ import FASTX
 import Makie
 using Base: front
 using LogExpFunctions: xlogx
-using SequenceLogos: __example_fasta, makie_sequence_logo!
+using SequenceLogos: __example_fasta
+using SequenceLogos: makie_sequence_logo!
 using Statistics: mean
 
 records = collect(FASTX.FASTA.Reader(open(__example_fasta())))
