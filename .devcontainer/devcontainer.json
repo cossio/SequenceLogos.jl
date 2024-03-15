@@ -1,10 +1,22 @@
 {
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
 		"ghcr.io/devcontainers/features/common-utils:2": {
-			"configureZshAsDefaultShell": "true"
+			"installZsh": true,
+			"configureZshAsDefaultShell": true,
+			"installOhMyZsh": true,
+			"installOhMyZshConfig": true,
+			"upgradePackages": true,
+			"nonFreePackages": true,
+			"username": "automatic",
+			"userUid": "automatic",
+			"userGid": "automatic"
 		}
+		//"ghcr.io/devcontainers-contrib/features/homebrew-package:1": {}
 	},
 	"customizations": {
 		"vscode": {
