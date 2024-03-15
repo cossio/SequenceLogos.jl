@@ -4,7 +4,9 @@ Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/cossio/CossioJuliaRegi
 Pkg.Registry.add("General")
 
 Pkg.add([
-    "Revise",
+    "CairoMakie",
+    "FASTX",
+    "LogExpFunctions",
     "Makie",
-    "CairoMakie"
+    "Revise",
 ])
