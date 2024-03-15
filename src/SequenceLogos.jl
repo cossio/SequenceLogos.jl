@@ -1,9 +1,8 @@
 module SequenceLogos
 
 import Makie
-
-using LazyArtifacts: LazyArtifacts, @artifact_str
-import Makie
+using LazyArtifacts: @artifact_str
+using LazyArtifacts: LazyArtifacts
 
 #include("logo.jl")
 #include("color_funs.jl")
