@@ -25,7 +25,6 @@ weights = p .* (log2(5) .- H)
 letters = collect(NTs)
 colors = [:red, :blue, :orange, :green, :black]
 
-
 weights = [
     1.0 1.0;
     2.0 3.0
