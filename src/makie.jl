@@ -62,3 +62,10 @@ function makie_sequence_logo!(
     weights_sorted, letters_sorted, colors_sorted = sort_sequence_logo(weights, letters, colors)
     return makie_seqlogo!(ax, weights_sorted, letters_sorted, colors_sorted)
 end
+
+
+function makie_sequence_logo_example()
+    fig = Makie.Figure()
+    ax = Makie.Axis(fig[1,1], width=500, height=200)
+    makie_sequence_logo!(ax, w, [])
+end
