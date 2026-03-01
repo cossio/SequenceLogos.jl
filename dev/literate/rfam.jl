@@ -2,9 +2,7 @@
 # SequenceLogos examples with RFAM
 =#
 
-import GitHub
-import PyPlot
-import SequenceLogos
+import GitHub, PyPlot, SequenceLogos
 using Downloads: download
 using Statistics: mean
 using LogExpFunctions: xlogx
