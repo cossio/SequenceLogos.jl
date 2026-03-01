@@ -7,14 +7,10 @@ authors = "Jorge FdCD <jorge.fdcd@icloud.com>"
 projects = ["test", "docs"]
 
 [deps]
-CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
-Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
 
 [compat]
-CairoMakie = "0.15.8"
 Colors = "0.12, 0.13"
-Makie = "0.24.8"
 PyPlot = "2.9"
 julia = "1.6"
