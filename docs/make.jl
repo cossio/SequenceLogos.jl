@@ -35,8 +35,7 @@ Documenter.makedocs(
             "RFAM" => "literate/rfam.md",
         ],
         "Reference" => "reference.md"
-    ],
-    strict = true
+    ]
 )
 
 clear_md_files(literate_dir)
