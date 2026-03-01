@@ -2,7 +2,7 @@
 
 julia_version = "1.12.5"
 manifest_format = "2.0"
-project_hash = "5fdeefccb0a8f2dc68e005c4ce2e85f3a7e8d56d"
+project_hash = "8f8f7208ffe8d97d91fbce682b60abe514f24aae"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -67,9 +67,9 @@ version = "1.2.0"
 
 [[deps.AlgebraOfGraphics]]
 deps = ["Accessors", "Colors", "DataAPI", "Dates", "Dictionaries", "FileIO", "GLM", "GeoInterface", "GeometryBasics", "GridLayoutBase", "Isoband", "KernelDensity", "Loess", "Makie", "NaturalSort", "PlotUtils", "PolygonOps", "PooledArrays", "PrecompileTools", "RelocatableFolders", "StatsBase", "StructArrays", "Tables"]
-git-tree-sha1 = "1d7762addd0726102ed4a94043a69c66b5ac0862"
+git-tree-sha1 = "a671a0921eb7bd717bda4013a391110c991d490e"
 uuid = "cbdf2221-f076-402e-a563-3d30da359d67"
-version = "0.12.1"
+version = "0.12.2"
 
     [deps.AlgebraOfGraphics.extensions]
     AlgebraOfGraphicsDynamicQuantitiesExt = "DynamicQuantities"
