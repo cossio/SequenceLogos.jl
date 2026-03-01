@@ -20,3 +20,4 @@ plot_sequence_logo_nt(logo)
 # Related
 
 * https://github.com/cossio/Logomaker.jl
+* https://github.com/cossio/MakieSequenceLogos.jl
