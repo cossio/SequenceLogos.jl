@@ -1,6 +1,6 @@
 name = "SequenceLogos"
 uuid = "7a3f67ce-6eeb-4904-9da4-2cbd106a5944"
-version = "0.2.2-DEV"
+version = "0.2.2"
 authors = "Jorge FdCD <jorge.fdcd@icloud.com>"
 
 [workspace]
