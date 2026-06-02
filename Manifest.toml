@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.12.5"
+julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "c24cbfca7696bd5514ce41caf295b077f9eaa638"
+project_hash = "2890743dd87736ed68b54248a2e40197381354b0"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -256,9 +256,9 @@ version = "2.21.0"
 
 [[deps.LogExpFunctions]]
 deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]
-git-tree-sha1 = "13ca9e2586b89836fd20cccf56e57e2b9ae7f38f"
+git-tree-sha1 = "77fe7779378a2331be7e86c64daaa2970bc2c1af"
 uuid = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
-version = "0.3.29"
+version = "1.0.0"
 
     [deps.LogExpFunctions.extensions]
     LogExpFunctionsChainRulesCoreExt = "ChainRulesCore"
@@ -416,7 +416,7 @@ version = "0.7.0"
 deps = ["Colors", "PyPlot"]
 path = "."
 uuid = "7a3f67ce-6eeb-4904-9da4-2cbd106a5944"
-version = "0.2.2-DEV"
+version = "0.2.3-DEV"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
