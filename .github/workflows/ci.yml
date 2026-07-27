@@ -20,12 +20,12 @@ jobs:
             os: windows-latest
             arch: x64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: julia-actions/setup-julia@fa02766e078afaaf09b14210362cee14137e6a32
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: julia-actions/cache@a45e8fa8be21c18a06b7177052533149e61e9b38
+      - uses: julia-actions/cache@b7788abd52452d5bc033d69796e110d9906af4ab
       - uses: julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1
         env:
           PYTHON: ""
