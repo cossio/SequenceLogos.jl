@@ -18,7 +18,7 @@ jobs:
         os:
           - ubuntu-latest
         arch:
-          - x64
+          - default
     env:
       JULIA_PKG_USE_CLI_GIT: true
     steps:
