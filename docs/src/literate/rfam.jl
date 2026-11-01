@@ -2,15 +2,14 @@
 # SequenceLogos examples with RFAM
 =#
 
-import GitHub, PyPlot, SequenceLogos
+import PyPlot, SequenceLogos
 using Downloads: download
 using Statistics: mean
 using LogExpFunctions: xlogx
 
 # Fetch RNA family alignment RF00162 from RFAM (pre-stored as a Github Gist)
 
-data = GitHub.gist("b63e87024fac287a1800b1555276a04b")
-url = data.files["RF00162-trimmed.afa"]["raw_url"]
+url = "https://gist.githubusercontent.com/cossio/b63e87024fac287a1800b1555276a04b/raw/RF00162-trimmed.afa"
 path = download(url; timeout = Inf)
 nothing #hide
 
